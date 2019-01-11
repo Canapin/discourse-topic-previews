@@ -1,6 +1,7 @@
 require_dependency 'cooked_post_processor'
 CookedPostProcessor.class_eval do
-  def extract_post_image
+  def extract_post_image1
+    byebug
     (extract_images_for_post -
     @doc.css("img.thumbnail") -
     @doc.css("img.site-icon") -
