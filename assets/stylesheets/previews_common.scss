@@ -1,23 +1,23 @@
 //tiles styling  specific styling
 #list-area.tiles-style {
 
-  .grid {
+  .tiles-grid {
     display:block;
     .topic-list-item-separator {
       display: none;
     }
   }
 
-  .grid-sizer,
-  .grid-item {
+  .tiles-grid-sizer,
+  .tiles-grid-item {
 
   }
 
-  .gutter-sizer {
+  .tiles-gutter-sizer {
      width: 6px;
    }
 
-  .grid-item {
+  .tiles-grid-item {
     box-sizing: border-box;
     cursor: pointer;
     float:top;
@@ -35,12 +35,12 @@
      "meta meta meta meta actions"
   }
 
-  .grid-item:hover {
+  .tiles-grid-item:hover {
     background-color: darken($secondary, 2%);
     lighten: ($primary, 70%);
   }
 
-  .grid-item:active {
+  .tiles-grid-item:active {
   }
 
   .topic-header-grid {
