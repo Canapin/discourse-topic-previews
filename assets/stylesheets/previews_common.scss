@@ -108,6 +108,10 @@
   .topic-thumbnail{
     grid-area: photo;
     padding: 0 0 4px 0;
+    .tiles-thumbnail > img {
+      height: auto;
+      width: 100%;
+    }
   }
 
   .thumbnail {

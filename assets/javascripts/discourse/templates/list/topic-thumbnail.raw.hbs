@@ -1,5 +1,9 @@
 <div class="topic-thumbnail">
   <a href='{{topic.url}}'>
-    {{preview-unbound thumbnails category=category opts=opts}}
+    {{#if topic.image_url}}
+      <div class="thumbnail tiles-thumbnail">
+        <img src="{{topic.image_url}}" />
+      </div>
+    {{/if}}
   </a>
 </div>
