@@ -165,7 +165,7 @@ export default {
               itemSelector: '.tiles-grid-item',
               transitionDuration: `${transDuration}s`,
               percentPosition: true,
-              Width: '.tiles-grid-sizer',
+              columnWidth: '.tiles-grid-sizer',
               gutter: '.tiles-gutter-sizer'
             });
 
@@ -199,6 +199,12 @@ export default {
             // needs 'div's for masonry
             this.set('tagName', 'div');
             this.classNames = ['tiles-grid-item'];
+
+            if (Discourse.SiteSettings.topic_list_tiles_larger_featured_tiles && topic.tags) {
+                if (topic.tags.filter(tag => this.get('featuredTags').indexOf(tag) > -1)[0]) {
+                  this.classNames.push('tiles-grid-item-width2');
+                }
+            }
           };
 
           if (thumbnails) {
@@ -247,8 +253,16 @@ export default {
           });
         },
 
+        @computed
+        featuredTags() {
+          return Discourse.SiteSettings.topic_list_featured_images_tag.split('|');
+        },
+
         _setupTitleCSS() {
-          this.$('.topic-title a.visited').closest('.topic-details').addClass('visited');
+          let $el = this.$('.topic-title a.visited');
+          if ($el) {
+            $el.closest('.topic-details').addClass('visited');
+          }
         },
 
         _setupExcerptClick() {
