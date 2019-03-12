@@ -15,7 +15,6 @@ register_svg_icon "heart" if respond_to?(:register_svg_icon)
 enabled_site_setting :topic_list_previews_enabled
 
 after_initialize do
-
   Topic.register_custom_field_type('thumbnails', :json)
   Category.register_custom_field_type('thumbnail_width', :integer)
   Category.register_custom_field_type('thumbnail_height', :integer)
