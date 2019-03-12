@@ -34,7 +34,6 @@ export default {
 	      completeRender(){
          if (this.get('tilesStyle')){
              Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
-             Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
          };
         },
 
