@@ -13,8 +13,16 @@
   // 1 column on very thin views
   .tiles-grid-item,
   .tiles-grid-sizer {
+    @if $max_columns = 1 {
+      width: 100%;
+    }
+  }
+
+  .tiles-grid[max-width~="461px"] .tiles-grid-item,
+  .tiles-grid[max-width~="461px"] .tiles-grid-sizer {
     width: 100%;
   }
+
   // 2 columns on medium widths
   .tiles-grid[min-width~="461px"] .tiles-grid-item,
   .tiles-grid[min-width~="461px"] .tiles-grid-sizer {
