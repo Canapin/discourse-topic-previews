@@ -14,10 +14,12 @@ export default {
     withPluginApi('0.8.12', (api) => {
 
       api.onPageChange(() => {
-        var primaryDiv = $(".tiles-grid");
-        if (primaryDiv) {
-          primaryDiv.masonry();
-        }
+        $( document ).ready(function() {
+          var primaryDiv = $(".tiles-grid");
+          if (primaryDiv) {
+            primaryDiv.masonry();
+          }
+        })
       });
 
       api.modifyClass('component:topic-list',  {
