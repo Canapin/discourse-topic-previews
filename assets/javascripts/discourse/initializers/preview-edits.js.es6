@@ -13,15 +13,6 @@ export default {
 
     withPluginApi('0.8.12', (api) => {
 
-      api.onPageChange(() => {
-        $( document ).ready(function() {
-          var primaryDiv = $(".tiles-grid");
-          if (primaryDiv) {
-            primaryDiv.masonry();
-          }
-        })
-      });
-
       api.modifyClass('component:topic-list',  {
         router: Ember.inject.service('-routing'),
         currentRoute: Ember.computed.alias('router.router.currentRouteName'),
@@ -41,9 +32,9 @@ export default {
 
 	      @on('didRender')
 	      completeRender(){
-         if (this.get('tilesStyle')){
-             Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
-         };
+          if (this.get('tilesStyle')){
+            Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
+          };
         },
 
         @on('didInsertElement')
@@ -59,7 +50,7 @@ export default {
           if (this.get('tilesStyle')){
             this.$().parents('#list-area').toggleClass('tiles-style', true);
             this.$("tbody").toggleClass('tiles-grid', true);
-            if ( !this.$( ".tiles-grid-sizer" ).length) {
+            if (!this.$( ".tiles-grid-sizer" ).length) {
               this.$(".tiles-grid").prepend("<div class='tiles-grid-sizer'></div><div class='tiles-gutter-sizer'></div>");
             };
           }
@@ -173,12 +164,10 @@ export default {
               itemSelector: '.tiles-grid-item',
               transitionDuration: `${transDuration}s`,
               percentPosition: true,
-              columnWidth: '.tiles-grid-sizer',
               gutter: '.tiles-gutter-sizer'
             });
 
             msnry = this.$('.tiles-grid').data('masonry');
-
             $('.tiles-grid').imagesLoaded(function() {msnry.layout()});
           };
         }
