@@ -34,16 +34,13 @@ export default {
             const category = this.get('parentView.parentView.parentView.topic.category');
             this.set('category', category);
           };
-          if (this.get('tilesStyle')){
-            Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
-          };
         },
 
 	      @on('didRender')
 	      completeRender(){
-         if (this.get('tilesStyle')){
+          if (this.get('tilesStyle')){
             Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
-         };
+          };
         },
 
         @on('didInsertElement')
@@ -59,7 +56,6 @@ export default {
           if (this.get('tilesStyle')){
             this.$().parents('#list-area').toggleClass('tiles-style', true);
             this.$("tbody").toggleClass('tiles-grid', true);
-            Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
           }
         },
 
