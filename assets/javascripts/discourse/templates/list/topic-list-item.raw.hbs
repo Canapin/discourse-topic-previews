@@ -6,14 +6,15 @@
 
 <td class='main-link clearfix' colspan="{{titleColSpan}}">
   {{#if tilesStyle}}
+  <div class="tiles-grid-item-content">
     <div class="topic-header-grid">
-      {{raw "list/topic-list-title" topic=topic tilesStyle=tilesStyle showTopicPostBadges=showTopicPostBadges}}
-      <div class="topic-category">
-        {{#if showCategoryBadge}}
-          {{category-link topic.category}}
-        {{/if}}
+        {{raw "list/topic-list-title" topic=topic tilesStyle=tilesStyle showTopicPostBadges=showTopicPostBadges}}
+        <div class="topic-category">
+          {{#if showCategoryBadge}}
+            {{category-link topic.category}}
+          {{/if}}
+        </div>
       </div>
-    </div>
   {{/if}}
 
   {{#if showThumbnail}}
@@ -56,6 +57,7 @@
       {{#if showActions}}
         {{raw "list/topic-actions" likeCount=likeCount topicActions=topicActions}}
       {{/if}}
+      </div>
     {{/if}}
 </td>
 

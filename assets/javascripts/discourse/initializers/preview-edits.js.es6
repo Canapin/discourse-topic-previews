@@ -4,6 +4,7 @@ import { withPluginApi } from 'discourse/lib/plugin-api';
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
 import PostsCountColumn from 'discourse/raw-views/list/posts-count-column';
+import { resizeAllGridItems } from '../lib/gridupdate';
 
 export default {
   name: 'preview-edits',
@@ -12,6 +13,11 @@ export default {
     if (!Discourse.SiteSettings.topic_list_previews_enabled) return;
 
     withPluginApi('0.8.12', (api) => {
+
+      api.onPageChange(() => {
+          $('.tiles-grid').imagesLoaded(resizeAllGridItems());
+      });
+
 
       api.modifyClass('component:topic-list',  {
         router: Ember.inject.service('-routing'),
@@ -28,12 +34,15 @@ export default {
             const category = this.get('parentView.parentView.parentView.topic.category');
             this.set('category', category);
           };
+          if (this.get('tilesStyle')){
+            Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
+          };
         },
 
 	      @on('didRender')
 	      completeRender(){
          if (this.get('tilesStyle')){
-             Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
+            Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
          };
         },
 
@@ -50,9 +59,7 @@ export default {
           if (this.get('tilesStyle')){
             this.$().parents('#list-area').toggleClass('tiles-style', true);
             this.$("tbody").toggleClass('tiles-grid', true);
-            if ( !this.$( ".tiles-grid-sizer" ).length) {
-              this.$(".tiles-grid").prepend("<div class='tiles-grid-sizer'></div><div class='tiles-gutter-sizer'></div>");
-            };
+            Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
           }
         },
 
@@ -145,33 +152,7 @@ export default {
         },
 
         applyMasonry() {
-          // initialize
-          let msnry = this.$('.tiles-grid').data('masonry');
-
-          if (msnry) {
-            msnry.reloadItems();
-            //disable transition
-            var transitionDuration = msnry.options.transitionDuration;
-            msnry.options.transitionDuration = 0;
-            $('.tiles-grid').imagesLoaded(function() {msnry.layout()});
-            //reset transition
-            msnry.options.transitionDuration = transitionDuration;
-          } else {
-            // init masonry
-            // transition set to zero on mobile due to undesirable behaviour on mobile safari if > 0
-            const transDuration = this.get('site.mobileView') ? 0 : Discourse.SiteSettings.topic_list_tiles_transition_time;
-            this.$('.tiles-grid').masonry({
-              itemSelector: '.tiles-grid-item',
-              transitionDuration: `${transDuration}s`,
-              percentPosition: true,
-              columnWidth: '.tiles-grid-sizer',
-              gutter: '.tiles-gutter-sizer'
-            });
-
-            msnry = this.$('.tiles-grid').data('masonry');
-
-            $('.tiles-grid').imagesLoaded(function() {msnry.layout()});
-          };
+          $('.tiles-grid').imagesLoaded(resizeAllGridItems());
         }
       });
 
@@ -235,7 +216,6 @@ export default {
           if (topic.get('thumbnails') && this.get('thumbnailFirstXRows') && (this.$().index() > this.get('thumbnailFirstXRows'))) {
             this.set('showThumbnail', false);
           }
-
           this._afterRender();
         },
 
