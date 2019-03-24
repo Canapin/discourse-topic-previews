@@ -39,7 +39,7 @@ export default {
 	      @on('didRender')
 	      completeRender(){
           if (this.get('tilesStyle')){
-            Ember.run.scheduleOnce('afterRender', this, this.applyMasonry);
+             Ember.run.scheduleOnce('afterRender', this, this.applyTiles);
           };
         },
 
@@ -147,7 +147,7 @@ export default {
           return Discourse.SiteSettings.topic_list_thumbnail_first_x_rows;
         },
 
-        applyMasonry() {
+        applyTiles() {
           $('.tiles-grid').imagesLoaded(resizeAllGridItems());
         }
       });

@@ -1,13 +1,15 @@
 var resizeAllGridItems = function resizeAllGridItems(){
-  const grid = $('.tiles-grid');
+  const grid = document.getElementsByClassName("tiles-grid")[0];
   if (!grid) {return;};
-  const rowHeight = parseInt(grid.css('grid-auto-rows'));
-  const rowGap = parseInt(grid.css('grid-row-gap'));
-  $('.tiles-grid-item').each(function() {
-    var itemHeight = parseInt($(this).children('.tiles-grid-item-content').outerHeight(true));
-    var rowSpan = Math.ceil((itemHeight + rowGap)/(rowHeight + rowGap));
-      $(this).css('grid-row-end' ,("span " + rowSpan));
-  });
+  const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+  const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
+  var allItems = document.getElementsByClassName("tiles-grid-item");
+  var x=0;
+  for(x=0;x<allItems.length;x++){
+    var thisHeight = allItems[x].querySelector('.tiles-grid-item-content').getBoundingClientRect().height
+    var rowSpan = Math.ceil((thisHeight+rowGap)/(rowHeight+rowGap));
+    allItems[x].style.gridRowEnd = "span "+rowSpan;
+   }
 };
 
 window.onload = resizeAllGridItems();

@@ -1,24 +1,26 @@
 <td>
   {{#if tilesStyle}}
-    <div class="topic-header-grid">
-      {{raw "list/topic-list-title" topic=topic tilesStyle=tilesStyle mobileView=site.mobileView}}
-      <div class="topic-category">
-        {{#if showCategoryBadge}}
-          {{category-link topic.category}}
-        {{/if}}
+    <div class="tiles-grid-item-content">
+      <div class="topic-header-grid">
+        {{raw "list/topic-list-title" topic=topic tilesStyle=tilesStyle mobileView=site.mobileView}}
+        <div class="topic-category">
+          {{#if showCategoryBadge}}
+            {{category-link topic.category}}
+          {{/if}}
+        </div>
       </div>
-    </div>
-    {{#if showThumbnail}}
-      {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
-    {{/if}}
-  {{else}}
-    {{#if showThumbnail}}
-      {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
+      {{#if showThumbnail}}
+        {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
+      {{/if}}
     {{else}}
-      <div class='pull-left'>
-        <a href="{{topic.lastPostUrl}}">{{avatar topic.lastPoster imageSize="large"}}</a>
-      </div>
-    {{/if}}
+      {{#if showThumbnail}}
+        {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
+      {{else}}
+        <div class='pull-left'>
+          <a href="{{topic.lastPostUrl}}">{{avatar topic.lastPoster imageSize="large"}}</a>
+        </div>
+      {{/if}}
+    </div>
   {{/if}}
 
   <div class='topic-details'>

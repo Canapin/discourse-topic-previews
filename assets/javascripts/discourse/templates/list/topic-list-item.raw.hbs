@@ -6,57 +6,57 @@
 
 <td class='main-link clearfix' colspan="{{titleColSpan}}">
   {{#if tilesStyle}}
-  <div class="tiles-grid-item-content">
-    <div class="topic-header-grid">
-        {{raw "list/topic-list-title" topic=topic tilesStyle=tilesStyle showTopicPostBadges=showTopicPostBadges}}
-        <div class="topic-category">
-          {{#if showCategoryBadge}}
-            {{category-link topic.category}}
-          {{/if}}
+    <div class="tiles-grid-item-content">
+      <div class="topic-header-grid">
+          {{raw "list/topic-list-title" topic=topic tilesStyle=tilesStyle showTopicPostBadges=showTopicPostBadges}}
+          <div class="topic-category">
+            {{#if showCategoryBadge}}
+              {{category-link topic.category}}
+            {{/if}}
+          </div>
         </div>
-      </div>
-  {{/if}}
-
-  {{#if showThumbnail}}
-    {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
-  {{/if}}
-
-  <div class="topic-details">
-    {{#unless tilesStyle}}
-      {{raw "list/topic-list-title"
-        topic=topic
-        showTopicPostBadges=showTopicPostBadges
-        homepage=parentView.homepage
-        suggested=parentView.suggestedList}}
-
-      {{#if showCategoryBadge}}
-        <div class='topic-category'>
-          {{category-link topic.category}}
-        </div>
-      {{/if}}
-
-      {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
-    {{/unless}}
-
-    {{#if expandPinned}}
-      {{raw "list/topic-excerpt" topic=topic}}
     {{/if}}
 
-    {{#unless tilesStyle}}
-      <div class="actions-and-meta-data">
+    {{#if showThumbnail}}
+      {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
+    {{/if}}
+
+    <div class="topic-details">
+      {{#unless tilesStyle}}
+        {{raw "list/topic-list-title"
+          topic=topic
+          showTopicPostBadges=showTopicPostBadges
+          homepage=parentView.homepage
+          suggested=parentView.suggestedList}}
+
+        {{#if showCategoryBadge}}
+          <div class='topic-category'>
+            {{category-link topic.category}}
+          </div>
+        {{/if}}
+
+        {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+      {{/unless}}
+
+      {{#if expandPinned}}
+        {{raw "list/topic-excerpt" topic=topic}}
+      {{/if}}
+
+      {{#unless tilesStyle}}
+        <div class="actions-and-meta-data">
+          {{#if showActions}}
+            {{raw "list/topic-actions" likeCount=likeCount topicActions=topicActions}}
+          {{/if}}
+          {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
+        </div>
+      {{/unless}}
+
+      {{#if tilesStyle}}
+        </div>
+        {{raw 'list/topic-meta' likesHeat=likesHeat title=view.title topic=topic}}
         {{#if showActions}}
           {{raw "list/topic-actions" likeCount=likeCount topicActions=topicActions}}
         {{/if}}
-        {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
-      </div>
-    {{/unless}}
-
-    {{#if tilesStyle}}
-      </div>
-      {{raw 'list/topic-meta' likesHeat=likesHeat title=view.title topic=topic}}
-      {{#if showActions}}
-        {{raw "list/topic-actions" likeCount=likeCount topicActions=topicActions}}
-      {{/if}}
       </div>
     {{/if}}
 </td>
