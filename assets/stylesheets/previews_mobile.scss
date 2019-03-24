@@ -78,6 +78,13 @@ img.thumbnail:not(.tiles-thumbnail) {
     border-radius: 3px;
   }
 
+  .tiles-grid-item-width2 {
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 3px;
+    grid-column-end: span 1;
+  }
+
   .tiles-grid-item-content {
     padding: 10px;
     display: grid;

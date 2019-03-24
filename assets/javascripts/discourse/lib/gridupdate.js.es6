@@ -1,10 +1,11 @@
 window.addEventListener("resize", resizeAllGridItems);
-window.addEventListener("scroll", resizeAllGridItems);
 
 function resizeGridItem(item, grid, rowHeight, rowGap){
-  const contentHeight = item.querySelector('.tiles-grid-item-content').getBoundingClientRect().height
-  const rowSpan = Math.ceil((contentHeight+rowGap)/(rowHeight+rowGap));
-  item.style.gridRowEnd = "span "+rowSpan;
+  imagesLoaded(item, function() {
+    const contentHeight = item.querySelector('.tiles-grid-item-content').getBoundingClientRect().height;
+    const rowSpan = Math.ceil((contentHeight+rowGap)/(rowHeight+rowGap));
+    item.style.gridRowEnd = "span "+rowSpan;
+  });
 }
 
 function resizeAllGridItems(){

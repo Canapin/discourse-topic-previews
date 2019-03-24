@@ -148,7 +148,7 @@ export default {
         },
 
         applyTiles() {
-          $('.tiles-grid').imagesLoaded(resizeAllGridItems());
+          resizeAllGridItems();
         }
       });
 
