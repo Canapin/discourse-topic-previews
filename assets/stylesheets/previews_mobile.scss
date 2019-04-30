@@ -1,28 +1,80 @@
+
  .mobile-view .topic-list {
+
+  .topic-list-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+     "thumbnail title numposts"
+     "thumbnail excerpt activity"
+     "thumbnail category activity"
+     "thumbnail tags activity"
+     "thumbnail actions activity";
+  }
+
   .topic-thumbnail {
-    padding: 0;
+    grid-area: thumbnail;
+    padding: 10px;
+    min-width: 80px;
+
+    .thumbnail {
+      border-radius: 3px;
+    }
   }
-  .topic-details {
-    max-height: initial;
-    position: relative;
+
+  .main-link {
+    grid-area: title;
+    text-align: left;
   }
-  div + .topic-details {
-    padding-left: 10px;
-    min-height: 45px;
-    overflow: hidden;
+
+
+
+  .pull-right {
+    grid-area: numposts;
+    align: right;
   }
+  // div + .topic-details {
+  //   padding-left: 10px;
+  //   min-height: 45px;
+  //   overflow: hidden;
+  // }
   .topic-excerpt {
-    max-height: initial;
+    grid-area: excerpt;
+    //max-height: initial;
     width: 100%;
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
   }
   .topic-category {
-    margin-top: 6px;
-    display: block;
+    grid-area: category;
+    //margin-top: 6px;
+    //float: left;
+    //display: block;
   }
   .topic-actions {
-    margin-top: 5px;
-    float: none;
+    grid-area: actions;
+    //margin-top: 5px;
+    //float: left;
   }
+
+  .num {
+    float: right;
+  }
+
   .list-button {
     font-size: 1em;
     padding: 0 10px 0 0px;
@@ -36,19 +88,32 @@
   .list-button i {
     vertical-align: top;
   }
-  .num.activity {
-    float: right;
+  .activity {
+    //display: flex;
+    grid-area: activity;
+    //align: right;
+    position: relative;
+
+      span {
+        //float: right;
+        position: absolute;
+        bottom: 0;
+        right:0;
+        text-align: right;
+      }
   }
+
 img.thumbnail:not(.tiles-thumbnail) {
     max-width:80px;
     max-height:80px;
   }
 
   .discourse-tags {
-    float: initial;
-    clear: initial;
-    margin-right: 30px;
-    flex-wrap: wrap;
+    grid-area: tags;
+    // float: left;
+    // clear: left;
+    // margin-right: 30px;
+    // flex-wrap: wrap;
   }
 }
 

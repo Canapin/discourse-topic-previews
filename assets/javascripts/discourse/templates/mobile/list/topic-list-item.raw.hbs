@@ -1,4 +1,3 @@
-<td>
   {{#if tilesStyle}}
     <div class="topic-header-grid">
       {{raw "list/topic-list-title" topic=topic tilesStyle=tilesStyle mobileView=site.mobileView}}
@@ -15,13 +14,12 @@
     {{#if showThumbnail}}
       {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
     {{else}}
-      <div class='pull-left'>
+      <div class='topic-thumbnail'>
         <a href="{{topic.lastPostUrl}}">{{avatar topic.lastPoster imageSize="large"}}</a>
       </div>
     {{/if}}
   {{/if}}
 
-  <div class='topic-details'>
     {{#unless tilesStyle}}
       <div class='main-link'>
         {{raw "list/topic-list-title"
@@ -34,6 +32,8 @@
       <div class='pull-right'>
         {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=showTopicPostBadges}}
       </div>
+    {{else}}
+      <div class='topic-details'>
     {{/unless}}
 
     {{#if expandPinned}}
@@ -62,8 +62,10 @@
       <div class='num activity last'>
         <span class="age activity" title="{{topic.bumpedAtTitle}}"><a href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a></span>
       </div>
+    {{else}}
+      </div>
     {{/unless}}
-  </div>
+
 
   {{#if tilesStyle}}
     {{raw 'list/topic-meta' likesHeat=likesHeat title=view.title topic=topic}}
@@ -71,4 +73,3 @@
       {{raw "list/topic-actions" likeCount=likeCount topicActions=topicActions}}
     {{/if}}
   {{/if}}
-</td>
