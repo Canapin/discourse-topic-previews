@@ -10,14 +10,6 @@
     {{#if showThumbnail}}
       {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
     {{/if}}
-  {{else}}
-    {{#if showThumbnail}}
-      {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
-    {{else}}
-      <div class='topic-thumbnail'>
-        <a href="{{topic.lastPostUrl}}">{{avatar topic.lastPoster imageSize="large"}}</a>
-      </div>
-    {{/if}}
   {{/if}}
 
     {{#unless tilesStyle}}
@@ -32,13 +24,21 @@
       <div class='pull-right'>
         {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=showTopicPostBadges}}
       </div>
+      <div class='topic-thumbnail-and-excerpt'>
+      {{#if showThumbnail}}
+        {{raw "list/topic-thumbnail" topic=topic thumbnails=thumbnails category=category opts=thumbnailOpts}}
+      {{else}}
+        <div class='topic-thumbnail'>
+          <a href="{{topic.lastPostUrl}}">{{avatar topic.lastPoster imageSize="large"}}</a>
+        </div>
+      {{/if}}
+      {{#if expandPinned}}
+        {{raw "list/topic-excerpt" topic=topic}}
+      {{/if}}
+      </div>
     {{else}}
       <div class='topic-details'>
     {{/unless}}
-
-    {{#if expandPinned}}
-      {{raw "list/topic-excerpt" topic=topic}}
-    {{/if}}
 
     {{#unless tilesStyle}}
       {{#if showCategoryBadge}}

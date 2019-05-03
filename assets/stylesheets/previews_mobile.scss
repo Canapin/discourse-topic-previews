@@ -2,24 +2,50 @@
  .mobile-view .topic-list {
 
   .topic-list-item {
+    padding-top: 10px;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto auto;
     grid-template-rows: auto auto auto auto auto;
     grid-template-areas:
-     "thumbnail title numposts"
-     "thumbnail excerpt activity"
-     "thumbnail category activity"
-     "thumbnail tags activity"
-     "thumbnail actions activity";
+     "title numposts"
+     "thumbnail_and_excerpt activity"
+     "category activity"
+     "tags activity"
+     "actions activity";
   }
 
-  .topic-thumbnail {
-    grid-area: thumbnail;
-    padding: 10px;
-    min-width: 80px;
+  .topic-thumbnail-and-excerpt {
+    grid-area: thumbnail_and_excerpt;
+
+    .topic-thumbnail {
+      float: left;
+      padding-right: 5px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      width:80px;
+    }
 
     .thumbnail {
       border-radius: 3px;
+    }
+
+    .topic-excerpt {
+      width: 100%;
+      /* These are technically the same, but use both */
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+
+      -ms-word-break: break-all;
+      /* This is the dangerous one in WebKit, as it breaks things wherever */
+      word-break: break-all;
+      /* Instead use this non-standard one: */
+      word-break: break-word;
+
+      /* Adds a hyphen where the word breaks, if supported (No Blink) */
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
     }
   }
 
@@ -28,47 +54,17 @@
     text-align: left;
   }
 
-
-
   .pull-right {
     grid-area: numposts;
     align: right;
   }
-  // div + .topic-details {
-  //   padding-left: 10px;
-  //   min-height: 45px;
-  //   overflow: hidden;
-  // }
-  .topic-excerpt {
-    grid-area: excerpt;
-    //max-height: initial;
-    width: 100%;
-    /* These are technically the same, but use both */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
 
-    -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-all;
-    /* Instead use this non-standard one: */
-    word-break: break-word;
-
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-  }
   .topic-category {
     grid-area: category;
-    //margin-top: 6px;
-    //float: left;
-    //display: block;
   }
+
   .topic-actions {
     grid-area: actions;
-    //margin-top: 5px;
-    //float: left;
   }
 
   .num {
@@ -79,33 +75,33 @@
     font-size: 1em;
     padding: 0 10px 0 0px;
   }
+
   .like-count {
     font-size: 1em;
     line-height: 1em;
     float: left;
     margin-right: 8px;
   }
+
   .list-button i {
     vertical-align: top;
   }
+
   .activity {
-    //display: flex;
     grid-area: activity;
-    //align: right;
     position: relative;
 
-      span {
-        //float: right;
-        position: absolute;
-        bottom: 0;
-        right:0;
-        text-align: right;
-      }
+    span {
+      position: absolute;
+      bottom: 0;
+      right:0;
+      text-align: right;
+    }
   }
 
 img.thumbnail:not(.tiles-thumbnail) {
-    max-width:80px;
-    max-height:80px;
+    width:80px;
+    //max-height:80px;
   }
 
   .discourse-tags {
