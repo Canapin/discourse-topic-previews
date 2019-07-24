@@ -66,8 +66,11 @@ img.thumbnail:not(.tiles-thumbnail) {
     grid-auto-rows: 10px;
   }
 
-  .tiles-grid-item-width2 {
-
+  .tiles-grid-item-width2,
+  .tiles-grid-sizer,
+  .tiles-grid-item {
+    // 1 column on all phones
+    width: 100%;
   }
 
   .tiles-grid-item {
