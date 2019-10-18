@@ -81,6 +81,7 @@ CookedPostProcessor.class_eval do
           if upload_id = ListHelper.create_topic_thumbnails(@post, url)
             # make a record of the upload id so it can be included in the PostUpload update later in the process
             @post.custom_fields['thumbnail_upload_id'] = upload_id
+            @post.save!
           end
         end
       end
