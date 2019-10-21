@@ -5,12 +5,33 @@ import { default as computed, on, observes } from 'ember-addons/ember-computed-d
 import DiscourseURL from 'discourse/lib/url';
 import PostsCountColumn from 'discourse/raw-views/list/posts-count-column';
 import Settings from "../mixins/settings";
+import Eyeline from "discourse/lib/eyeline";
+import Scrolling from "discourse/mixins/scrolling";
+import debounce from "discourse/lib/debounce";
 
 export default {
   name: 'preview-edits',
   initialize(container){
 
     if (!Discourse.SiteSettings.topic_list_previews_enabled) return;
+
+    const ScrollingDOMMethods = {
+  bindOnScroll(onScrollMethod, name) {
+    name = name || "default";
+    $(document).bind(`touchmove.discourse-${name}`, onScrollMethod);
+    $(window).bind(`scroll.discourse-${name}`, onScrollMethod);
+  },
+
+  unbindOnScroll(name) {
+    name = name || "default";
+    $(window).unbind(`scroll.discourse-${name}`);
+    $(document).unbind(`touchmove.discourse-${name}`);
+  },
+
+  screenNotFull() {
+    return $(window).height() > $("#main").height();
+  }
+};
 
     withPluginApi('0.8.12', (api) => {
 
@@ -19,6 +40,8 @@ export default {
             this._super(...arguments);
             if (this.class == "paginated-topics-list") {
               this.set("eyelineSelector", '.topic-list-item');
+             } else if (this.class == "tilesStyle") {
+              this.set ("eyelineSelector", '.tiles-grid:nth-last-child(30)')
             } else {
               this.set("eyelineSelector", this.selector)
             }
@@ -44,6 +67,7 @@ export default {
       });
 
       api.modifyClass('component:topic-list',  Settings);
+      api.modifyClass('component:topic-list',  Scrolling);
 
       api.modifyClass('component:topic-list',  {
         router: Ember.inject.service('-routing'),
@@ -60,6 +84,44 @@ export default {
             const category = this.get('parentView.parentView.parentView.topic.category');
             this.set('category', category);
           };
+        },
+  
+        @on("didInsertElement")
+        _bindEyeline() {
+          console.log (this.class);
+          console.log ('hello');
+          let eyeline = new Eyeline(this.eyelineSelector);
+          if (this.class == "tilesStyle") {
+              this.set ("eyelineSelector", '.tiles-grid:nth-last-child(30)');
+              let eyeline = new Eyeline(this.eyelineSelector);
+          } else {
+            let eyeline = new Eyeline(this.eyelineSelector + ":last");
+          };
+          this.set("eyeline", eyeline);
+          eyeline.on("sawBottom", () => this.send("loadMore"));
+          this.bindScrolling();
+        },
+
+
+        bindScrolling(opts) {
+          opts = opts || { debounce: 100 };
+
+          // So we can not call the scrolled event while transitioning
+          const router = Discourse.__container__.lookup("router:main")
+            ._routerMicrolib;
+
+          let onScrollMethod = () => {
+            if (router.activeTransition) {
+              return;
+            }
+            return Ember.run.scheduleOnce("afterRender", this, "scrolled");
+          };
+
+          if (opts.debounce) {
+            onScrollMethod = debounce(onScrollMethod, opts.debounce);
+          }
+
+          ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
         },
         
         @on('didRender')
