@@ -1,5 +1,5 @@
 //tiles styling  specific styling
-#list-area.tiles-style {
+.tiles-style {
 
   .tiles-grid {
     display:block;
@@ -133,17 +133,14 @@
       max-width: 100%;
       float: left;
       clear: both;
-      /* These are technically the same, but use both */
+      
       overflow-wrap: break-word;
       word-wrap: break-word;
 
       -ms-word-break: break-all;
-      /* This is the dangerous one in WebKit, as it breaks things wherever */
       word-break: break-all;
-      /* Instead use this non-standard one: */
       word-break: break-word;
 
-      /* Adds a hyphen where the word breaks, if supported (No Blink) */
       -ms-hyphens: auto;
       -moz-hyphens: auto;
       -webkit-hyphens: auto;
@@ -425,3 +422,43 @@ button.list-button {
   transform: translateX(+2px);
   box-shadow: 1px 1px 1px 1px #888888;
 }
+
+.tlp-thumbnail-header-preview-img {
+  border: solid 1px #919191;
+  margin: 10px 0px 10px 0px;
+  padding: 5px;
+  width: 148px;
+  max-height: 148px;
+}
+
+.portfolio-button-inner{
+  width:100px;
+  padding: 6px;
+  overflow: hidden;
+  font-size: 1em;
+  height: 18px;
+  min-width: 100px;
+  vertical-align: middle;
+  justify-content: center;
+  white-space: nowrap;
+  margin-left: 2px;
+  display: inline-flex;
+  cursor: pointer;
+  
+  background-color: $tertiary;
+
+  label {
+    color: $secondary;
+    display: inline-block;
+    cursor: pointer;
+  }
+  svg {
+    color: $secondary;
+    display: inline-block;
+  }
+
+  &:hover {
+    background-color: darken($tertiary, 5%);
+  }
+}
+

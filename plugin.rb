@@ -12,12 +12,14 @@ register_asset 'javascripts/discourse/lib/imagesloaded.js'
 register_svg_icon "bookmark" if respond_to?(:register_svg_icon)
 register_svg_icon "heart" if respond_to?(:register_svg_icon)
 register_svg_icon "id-card" if respond_to?(:register_svg_icon)
+register_svg_icon "images" if respond_to?(:register_svg_icon)
 
 enabled_site_setting :topic_list_previews_enabled
 
 after_initialize do
   Topic.register_custom_field_type('thumbnails', :json)
   Topic.register_custom_field_type('user_thumbnail_selected', :boolean)
+  Topic.register_custom_field_type('thumbnail_from_post', :integer)
   Category.register_custom_field_type('thumbnail_width', :integer)
   Category.register_custom_field_type('thumbnail_height', :integer)
   Category.register_custom_field_type('topic_list_featured_images', :boolean)
@@ -54,7 +56,7 @@ after_initialize do
 
   DiscourseEvent.on(:accepted_solution) do |post|
     if post.image_url && SiteSetting.topic_list_previews_enabled
-      ListHelper.create_topic_thumbnails(post, post.image_url)
+      ListHelper.create_topic_thumbnails(post, post.image_url)[:id]
     end
   end
 
@@ -71,7 +73,7 @@ after_initialize do
     "topic_list_featured_images"
   ].each do |key|
     Site.preloaded_category_custom_fields << key if Site.respond_to? :preloaded_category_custom_fields
-    add_to_serializer(:basic_category, key.to_sym) { object.custom_fields[key] }
+    add_to_serializer(:basic_category, key.to_sym, false) { object.custom_fields[key] }
   end
 
   PostRevisor.track_topic_field(:image_url)
@@ -93,6 +95,7 @@ after_initialize do
           post_id = post.id
           doc = Nokogiri::HTML( post.cooked )
           @img_srcs = doc.css('img').map{ |i| i['src'] }
+          @img_srcs << post.image_url if (!post.image_url.blank? && (!@img_srcs.include? post.image_url))
           @img_srcs.each do |image|
             if image == image_url
               thumbnail_post = post
@@ -102,13 +105,19 @@ after_initialize do
           break if thumbnail_post_id != nil
       end
 
+      tc.record_change('thumbnail_from_post', tc.topic.custom_fields['thumbnail_from_post'], thumbnail_post_id)
+      tc.topic.custom_fields['thumbnail_from_post'] = thumbnail_post_id
+
       unless SiteSetting.topic_list_hotlink_thumbnails ||
                 !SiteSetting.topic_list_previews_enabled
         if !thumbnail_post_id.nil?
-          if upload_id = ListHelper.create_topic_thumbnails(thumbnail_post, image_url)
+          thumbnails = ListHelper.create_topic_thumbnails(thumbnail_post, image_url)
+          if thumbnails[:id]
+            tc.record_change('thumbnails', tc.topic.custom_fields['thumbnails'], thumbnails[:thumbnails])
+            tc.topic.custom_fields['thumbnails'] = thumbnails[:thumbnails]
             ## ensure there is a post_upload record so the upload is not removed in the cleanup
             unless PostUpload.where(post_id: thumbnail_post_id).exists?
-              PostUpload.create(post_id: thumbnail_post_id, upload_id: upload_id)
+              PostUpload.create(post_id: thumbnail_post_id, upload_id: thumbnails[:id])
             end
           end
         end
