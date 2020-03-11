@@ -1,8 +1,9 @@
+import discourseComputed, { on, observes } from "discourse-common/utils/decorators";
+import { alias, and, equal, not } from "@ember/object/computed";
+import DiscourseURL from "discourse/lib/url";
 import { testImageUrl, animateHeart, getDefaultThumbnail } from '../lib/utilities';
 import { addLike, sendBookmark, removeLike } from '../lib/actions';
 import { withPluginApi } from 'discourse/lib/plugin-api';
-import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
-import DiscourseURL from 'discourse/lib/url';
 import PostsCountColumn from 'discourse/raw-views/list/posts-count-column';
 import { resizeAllGridItems } from '../lib/gridupdate';
 import Settings from "../mixins/settings";
@@ -35,16 +36,16 @@ export default {
       api.modifyClass('component:basic-topic-list', {
         router: Ember.inject.service('-routing'),
         classNameBindings: ['showThumbnail', 'showExcerpt', 'showActions', 'tilesStyle'],
-        currentRoute: Ember.computed.alias('router.currentRouteName'),
+        currentRoute: alias('router.currentRouteName'),
         listChanged: false,
 
         skipHeader() {
           this.get('tilesStyle') || this.get('site.mobileView');
         },
 
-        @computed('listChanged')
+        @discourseComputed('listChanged')
         tilesStyle() {
-          this._settingEnabled('topic_list_tiles');
+          this._settingEnabled('topic_list_tiles');       
         }
       });
 
@@ -52,10 +53,10 @@ export default {
 
       api.modifyClass('component:topic-list',  {
         router: Ember.inject.service('-routing'),
-        currentRoute: Ember.computed.alias('router.router.currentRouteName'),
+        currentRoute: alias('router.router.currentRouteName'),
         classNameBindings: ['showThumbnail', 'showExcerpt', 'showActions', 'tilesStyle'],
-        suggestedList: Ember.computed.equal('parentView.parentView.parentView.elementId', 'suggested-topics'),
-        discoveryList: Ember.computed.equal('parentView._debugContainerKey', 'component:discovery-topics-list'),
+        discoveryList: equal('parentView._debugContainerKey', 'component:discovery-topics-list'),
+        suggestedList: equal('parentView.parentView.parentView.elementId', 'suggested-topics'),
         listChanged: false,
 
         @on('init')
@@ -65,6 +66,9 @@ export default {
             const category = this.get('parentView.parentView.parentView.topic.category');
             this.set('category', category);
           };
+          if (Discourse.SiteSettings.topic_list_fade_in_time) {
+            $("#list-area").fadeOut(0)
+          }
         },
 
 	      @on('didRender')
@@ -72,6 +76,9 @@ export default {
           if (this.get('tilesStyle')){
              Ember.run.scheduleOnce('afterRender', this, this.applyTiles);
           };
+          if (Discourse.SiteSettings.topic_list_fade_in_time) {
+            $("#list-area").fadeIn(Discourse.SiteSettings.topic_list_fade_in_time)
+          }
         },
 
         @on('didInsertElement')
@@ -96,47 +103,32 @@ export default {
           this.$("tbody").removeClass('tiles-grid');
         },
 
-        @computed('listChanged')
+        @discourseComputed('listChanged')
         tilesStyle() {
           return this._settingEnabled('topic_list_tiles');
         },
 
-        @computed('listChanged')
+        @discourseComputed('listChanged')
         showThumbnail() {
           return this._settingEnabled('topic_list_thumbnail');
         },
 
-        @computed('listChanged')
+        @discourseComputed('listChanged')
         showExcerpt() {
           return this._settingEnabled('topic_list_excerpt');
         },
 
-        @computed('listChanged')
+        @discourseComputed('listChanged')
         showActions() {
           return this._settingEnabled('topic_list_action');
         },
 
-        @computed('listChanged')
-	        showCategoryBadge() {
-            const catcolumn = this._settingEnabled('topic_list_category_column');
-            const path = window.location.pathname;
-            const isTopic = /^\/t\//.test(path);
-            return (isTopic && !catcolumn)||(!catcolumn && (!this.get('category') || this.get('category.has_children')));
-	        },
-
-        @observes('showCategoryBadge', 'hideCategory')
-        toggleHideCategory() {
-          if (this.get('showCategoryBadge') && !this.get('hideCategory')) {
-            this.set('hideCategory', true);
-          }
-        },
-
-        @computed('listChanged')
+        @discourseComputed('listChanged')
         skipHeader() {
           return this.get('tilesStyle') || this.get('site.mobileView');
         },
 
-        @computed('listChanged')
+        @discourseComputed('listChanged')
         thumbnailFirstXRows() {
           return Discourse.SiteSettings.topic_list_thumbnail_first_x_rows;
         },
@@ -149,13 +141,14 @@ export default {
       api.modifyClass('component:topic-list-item', {
         canBookmark: Ember.computed.bool('currentUser'),
         rerenderTriggers: ['bulkSelectEnabled', 'topic.pinned', 'likeDifference', 'topic.thumbnails'],
-        tilesStyle: Ember.computed.alias('parentView.tilesStyle'),
-        showThumbnail: Ember.computed.and('thumbnails', 'parentView.showThumbnail'),
-        showExcerpt: Ember.computed.and('topic.excerpt', 'parentView.showExcerpt'),
-        showActions: Ember.computed.alias('parentView.showActions'),
-        thumbnailFirstXRows: Ember.computed.alias('parentView.thumbnailFirstXRows'),
-        category: Ember.computed.alias('parentView.category'),
-        currentRoute: Ember.computed.alias('parentView.currentRoute'),
+        tilesStyle: alias('parentView.tilesStyle'),
+        notTilesStyle: not('parentView.tilesStyle'),
+        showThumbnail: and('thumbnails', 'parentView.showThumbnail'),
+        showExcerpt: and('topic.excerpt', 'parentView.showExcerpt'),
+        showActions: alias('parentView.showActions'),
+        thumbnailFirstXRows: alias('parentView.thumbnailFirstXRows'),
+        category: alias('parentView.category'),
+        currentRoute: alias('parentView.currentRoute'),
 
         // Lifecyle logic
 
@@ -222,7 +215,7 @@ export default {
           });
         },
 
-        @computed
+        @discourseComputed
         featuredTags() {
           return Discourse.SiteSettings.topic_list_featured_images_tag.split('|');
         },
@@ -285,7 +278,7 @@ export default {
 
         // Overrides
 
-        @computed()
+        @discourseComputed()
         expandPinned() {
           if (this.get('showExcerpt')) {return true;}
           return this._super();
@@ -293,7 +286,7 @@ export default {
 
         // Display objects
 
-        @computed()
+        @discourseComputed()
         posterNames() {
           let posters = this.get('topic.posters');
           let posterNames = '';
@@ -309,17 +302,17 @@ export default {
           return posterNames;
         },
 
-        @computed('topic.thumbnails')
+        @discourseComputed('topic.thumbnails')
         thumbnails(){
           return this.get('topic.thumbnails');
         },
 
-        @computed('topic.category')
+        @discourseComputed('topic.category')
         defaultThumbnail(category){
           return getDefaultThumbnail(category);
         },
 
-        @computed('tilesStyle', 'thumbnailWidth', 'thumbnailHeight')
+        @discourseComputed('tilesStyle', 'thumbnailWidth', 'thumbnailHeight')
         thumbnailOpts(tilesStyle, thumbnailWidth, thumbnailHeight) {
           let opts = {
             tilesStyle
@@ -336,7 +329,7 @@ export default {
           return opts;
         },
 
-        @computed('likeCount')
+        @discourseComputed('likeCount')
         topicActions(likeCount) {
           let actions = [];
           if (likeCount || this.get('topic.topic_post_can_like') || !this.get('currentUser') ||
@@ -355,25 +348,21 @@ export default {
           return actions;
         },
 
-        @computed('likeDifference')
+        @discourseComputed('likeDifference')
         likeCount(likeDifference) {
           return (likeDifference == null ? this.get('topic.topic_post_like_count') : likeDifference) || 0;
         },
 
-        @computed('hasLiked')
+        @discourseComputed('hasLiked')
         hasLikedDisplay() {
           let hasLiked = this.get('hasLiked');
           return hasLiked == null ? this.get('topic.topic_post_liked') : hasLiked;
         },
 
-        @computed('parentView.showCategoryBadge', 'topic.isPinnedUncategorized')
-        showCategoryBadge(show, isPinnedUncategorized) {
-          return show && !isPinnedUncategorized;
-        },
-
-        @computed('hideCategory', 'topic.isPinnedUncategorized')
-        showCategoryColumn(hide, isPinnedUncategorized) {
-          return !hide && !isPinnedUncategorized;
+        @discourseComputed('category','topic.isPinnedUncategorized')
+        showCategoryBadge(category, isPinnedUncategorized) {
+          const isTopic = (typeof(topic) !== 'undefined') ;
+          return (isTopic || !category || category.has_children) && !isPinnedUncategorized;
         },
 
         changeLikeCount(change) {
@@ -381,7 +370,7 @@ export default {
               newCount = count + (change || 0);
           this.set('hasLiked', Boolean(change > 0));
           this.set('likeDifference', newCount);
-          this.rerenderBuffer();
+          this.renderTopicListItem();
           this._afterRender();
         },
 
@@ -442,7 +431,12 @@ export default {
 
         @on('willDestroyElement')
         removeRefreshTimelinePosition() {
-          this.appEvents.off('topic:refresh-timeline-position', this, () => this.queueDockCheck());
+          try {
+            this.appEvents.off('topic:refresh-timeline-position', this, () => this.queueDockCheck());
+          }
+          catch(err) {
+            console.log(err.message);
+          }
         }
       });
     });

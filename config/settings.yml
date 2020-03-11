@@ -82,25 +82,6 @@ plugins:
   topic_list_tiles_larger_featured_tiles:
     default: true
     client: true
-  topic_list_category_column:
-    client: true
-    type: list
-    default: ''
-    choices:
-     - latest
-     - new
-     - unread
-     - top
-     - tags
-     - suggested
-     - agenda
-     - latest-mobile
-     - new-mobile
-     - unread-mobile
-     - top-mobile
-     - tags-mobile
-     - suggested-mobile
-     - agenda-mobile
   topic_list_portfolio:
     default: true
     client: true
@@ -151,6 +132,9 @@ plugins:
   topic_list_featured_images:
     default: false
     client: true
+  topic_list_featured_images_full_res:
+    default: false
+    client: false
   topic_list_featured_images_category:
     default: false
     client: true
@@ -187,4 +171,7 @@ plugins:
       - topic
   topic_list_test_image_url_timeout:
     default: 5000
+    client: true
+  topic_list_fade_in_time:
+    default: 0
     client: true

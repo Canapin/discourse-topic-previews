@@ -16,12 +16,17 @@ register_svg_icon "images" if respond_to?(:register_svg_icon)
 
 enabled_site_setting :topic_list_previews_enabled
 
+DiscoursePluginRegistry.serialized_current_user_fields << "tlp_user_prefs_prefer_low_res_thumbnails"
+
 after_initialize do
+  User.register_custom_field_type('tlp_user_prefs_prefer_low_res_thumbnails', :boolean)
   Topic.register_custom_field_type('thumbnails', :json)
   Topic.register_custom_field_type('thumbnail_from_post', :integer)
   Category.register_custom_field_type('thumbnail_width', :integer)
   Category.register_custom_field_type('thumbnail_height', :integer)
   Category.register_custom_field_type('topic_list_featured_images', :boolean)
+
+  register_editable_user_custom_field :tlp_user_prefs_prefer_low_res_thumbnails
 
   SiteSetting.create_thumbnails = true
 
@@ -49,8 +54,9 @@ after_initialize do
   load File.expand_path('../lib/featured_topics.rb', __FILE__)
   load File.expand_path('../lib/topic_list_edits.rb', __FILE__)
   load File.expand_path('../lib/cooked_post_processor_edits.rb', __FILE__)
+  load File.expand_path('../serializers/topic_list_item_edits_mixin.rb', __FILE__)
   load File.expand_path('../serializers/topic_list_item_edits.rb', __FILE__)
-
+  
   TopicList.preloaded_custom_fields << "accepted_answer_post_id" if TopicList.respond_to? :preloaded_custom_fields
   TopicList.preloaded_custom_fields << "thumbnails" if TopicList.respond_to? :preloaded_custom_fields
 
@@ -75,8 +81,6 @@ after_initialize do
     Site.preloaded_category_custom_fields << key if Site.respond_to? :preloaded_category_custom_fields
     add_to_serializer(:basic_category, key.to_sym, false) { object.custom_fields[key] }
   end
-
-  PostRevisor.track_topic_field(:image_url)
 
   PostRevisor.class_eval do
     track_topic_field(:image_url) do |tc, image_url|
