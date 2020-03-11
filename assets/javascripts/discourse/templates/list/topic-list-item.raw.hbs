@@ -52,6 +52,10 @@
 
     {{#if tilesStyle}}
       </div>
+      {{raw 'list/topic-meta' likesHeat=likesHeat title=view.title topic=topic}}
+      {{#if showActions}}
+        {{raw "list/topic-actions" likeCount=likeCount topicActions=topicActions}}
+      {{/if}}
     {{/if}}
 </td>
 
