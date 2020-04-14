@@ -55,8 +55,6 @@ export default {
         router: Ember.inject.service('-routing'),
         currentRoute: alias('router.router.currentRouteName'),
         classNameBindings: ['showThumbnail', 'showExcerpt', 'showActions', 'tilesStyle'],
-        discoveryList: equal('parentView._debugContainerKey', 'component:discovery-topics-list'),
-        suggestedList: equal('parentView.parentView.parentView.elementId', 'suggested-topics'),
         listChanged: false,
 
         @on('init')
@@ -95,6 +93,21 @@ export default {
             this.$().parents('#list-area').toggleClass('tiles-style', true);
             this.$("tbody").toggleClass('tiles-grid', true);
           }
+        },
+
+        @discourseComputed('listChanged')
+        routeShortName() {
+         return this.get('router').currentRouteName.split('.')[0];
+        },
+
+        @discourseComputed('routeShortName')
+        discoveryList() {
+          return (this.get('routeShortName') == 'discovery');
+        },
+
+        @discourseComputed('routeShortName')
+        suggestedList() {
+          return (this.get('routeShortName') == 'topic');
         },
 
         @on('willDestroyElement')
