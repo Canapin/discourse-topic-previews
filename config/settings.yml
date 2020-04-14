@@ -35,8 +35,6 @@ plugins:
      - unread-mobile
      - top-mobile
      - tags-mobile
-     - suggested-mobile
-     - agenda-mobile
   topic_list_excerpt:
     client: true
     type: list
@@ -56,8 +54,6 @@ plugins:
      - unread-mobile
      - top-mobile
      - tags-mobile
-     - suggested-mobile
-     - agenda-mobile
   topic_list_action:
     client: true
     type: list
@@ -77,8 +73,9 @@ plugins:
      - unread-mobile
      - top-mobile
      - tags-mobile
-     - suggested-mobile
-     - agenda-mobile
+  topic_list_tiles_transition_time:
+    default: 0.5
+    client: true
   topic_list_tiles_larger_featured_tiles:
     default: true
     client: true
