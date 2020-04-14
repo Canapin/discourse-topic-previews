@@ -29,7 +29,25 @@ export default {
               this.set("eyelineSelector", this.selector)
             }
           }
-       });
+      });
+
+      api.modifyClass('component:basic-topic-list', Settings);
+
+      api.modifyClass('component:basic-topic-list', {
+        router: Ember.inject.service('-routing'),
+        classNameBindings: ['showThumbnail', 'showExcerpt', 'showActions', 'tilesStyle'],
+        currentRoute: alias('router.currentRouteName'),
+        listChanged: false,
+
+        skipHeader() {
+          this.get('tilesStyle') || this.get('site.mobileView');
+        },
+
+        @discourseComputed('listChanged')
+        tilesStyle() {
+          this._settingEnabled('topic_list_tiles');
+        }
+      });
 
       api.modifyClass('component:topic-list',  Settings);
 
