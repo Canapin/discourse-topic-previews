@@ -73,9 +73,6 @@ plugins:
      - unread-mobile
      - top-mobile
      - tags-mobile
-  topic_list_tiles_transition_time:
-    default: 0.5
-    client: true
   topic_list_tiles_larger_featured_tiles:
     default: true
     client: true
