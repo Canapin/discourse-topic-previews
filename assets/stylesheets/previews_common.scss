@@ -158,6 +158,11 @@
 
   .topic-meta{
     grid-area: meta;
+
+    .topic-views {
+      color: $primary-medium;
+    }
+
     .topic-replies span {
       padding-left: 3px;
     }
